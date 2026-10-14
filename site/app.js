@@ -2,6 +2,8 @@ import {
   applyMaskToRgba,
   logitsToConfidence,
   resizeMaskBilinear,
+  beginImageRun,
+  endImageRun,
   selectMaskTensor,
   validateImageFile,
 } from './processing.mjs';
@@ -74,6 +76,7 @@ function clearResult() {
 }
 
 function chooseFile(file) {
+  if (state.working) return;
   const validation = validateImageFile(file);
   if (!validation.ok) {
     setStatus(validation.reason, 'error');
@@ -97,6 +100,7 @@ function chooseFile(file) {
 }
 
 function resetApp() {
+  if (state.working) return;
   clearResult();
   if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
   state.file = null;
@@ -181,16 +185,21 @@ function renderCutout() {
 }
 
 async function processImage() {
-  if (!state.file || state.working) return;
-  state.working = true;
-  elements.processButton.disabled = true;
-  elements.processButton.textContent = 'Preparing…';
-  elements.downloadButton.hidden = true;
-  elements.edgeControl.hidden = true;
+  const run = beginImageRun(state);
+  if (!run) return;
+  const file = run.file;
 
   let bitmap;
   try {
-    bitmap = await createImageBitmap(state.file);
+    elements.fileInput.disabled = true;
+    elements.clearButton.disabled = true;
+    elements.workbench.setAttribute('aria-busy', 'true');
+    elements.processButton.disabled = true;
+    elements.processButton.textContent = 'Preparing…';
+    elements.downloadButton.hidden = true;
+    elements.edgeControl.hidden = true;
+
+    bitmap = await createImageBitmap(file);
     const { width, height } = bitmap;
     if (width * height > MAX_IMAGE_PIXELS) {
       throw new Error('This photo is over 25 megapixels. Resize it and try again.');
@@ -210,7 +219,7 @@ async function processImage() {
     setStatus('Finding the subject locally…');
     setProgress(0, 'Preparing a 512 × 512 model input…');
 
-    const rawImage = await state.RawImage.read(state.file);
+    const rawImage = await state.RawImage.read(file);
     const { pixel_values: pixelValues } = await state.processor(rawImage);
     const modelOutput = await state.model({ input_image: pixelValues });
     const maskTensor = selectMaskTensor(modelOutput);
@@ -236,7 +245,10 @@ async function processImage() {
     hideProgress();
   } finally {
     bitmap?.close();
-    state.working = false;
+    endImageRun(state);
+    elements.fileInput.disabled = false;
+    elements.clearButton.disabled = false;
+    elements.workbench.setAttribute('aria-busy', 'false');
     elements.processButton.disabled = !state.file;
     elements.processButton.textContent = 'Remove background';
   }

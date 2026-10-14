@@ -31,6 +31,16 @@ export function selectMaskTensor(output) {
   return tensor;
 }
 
+export function beginImageRun(state) {
+  if (!state.file || state.working) return null;
+  state.working = true;
+  return Object.freeze({ file: state.file });
+}
+
+export function endImageRun(state) {
+  state.working = false;
+}
+
 export function confidenceToAlpha(confidence, feather = 0) {
   const value = Math.min(1, Math.max(0, confidence));
   const softness = Math.min(1, Math.max(0, feather));

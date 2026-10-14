@@ -15,4 +15,4 @@ The selected FP16 ONNX graph was checked directly: it accepts `input_image` with
 
 ## Transformers.js
 
-The app loads Transformers.js version 3.7.2 from [jsDelivr](https://www.jsdelivr.com/package/npm/@huggingface/transformers) at run time. See the [Transformers.js repository](https://github.com/huggingface/transformers.js) for its licensing and source.
+The app loads Transformers.js version 3.7.2 from [jsDelivr](https://www.jsdelivr.com/package/npm/@huggingface/transformers) at run time. The pinned package identifies its license as Apache-2.0; see the [package license](https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2/LICENSE) and the [Transformers.js repository](https://github.com/huggingface/transformers.js) for source.

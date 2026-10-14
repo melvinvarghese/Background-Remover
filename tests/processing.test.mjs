@@ -64,3 +64,25 @@ test('selects BiRefNet mask tensors from its raw ONNX output and rejects missing
   assert.equal(selectMaskTensor({ logits: tensor }), tensor);
   assert.throws(() => selectMaskTensor({}), /model output did not include a mask tensor/i);
 });
+
+test('locks an image-processing run to its original file until the run finishes', async () => {
+  const { beginImageRun, endImageRun } = await loadProcessing();
+  assert.equal(typeof beginImageRun, 'function', 'processing must provide an exclusive image-run lock');
+  assert.equal(typeof endImageRun, 'function', 'processing must release the image-run lock');
+  if (typeof beginImageRun !== 'function' || typeof endImageRun !== 'function') return;
+
+  const firstFile = { name: 'first.png' };
+  const replacementFile = { name: 'replacement.png' };
+  const state = { file: firstFile, working: false };
+  const firstRun = beginImageRun(state);
+  assert.strictEqual(firstRun.file, firstFile);
+  assert.equal(state.working, true);
+
+  state.file = replacementFile;
+  assert.strictEqual(firstRun.file, firstFile);
+  assert.equal(beginImageRun(state), null);
+
+  endImageRun(state);
+  assert.equal(state.working, false);
+  assert.strictEqual(beginImageRun(state).file, replacementFile);
+});

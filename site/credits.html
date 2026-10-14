@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f5fa">
+    <meta name="description" content="Open-source model, runtime, and project license notices for Cutout.">
+    <meta name="referrer" content="no-referrer">
+    <title>Credits &amp; licenses — Cutout</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Cutout home">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="1" y="1" width="38" height="38" rx="12" fill="currentColor" />
+          <path d="M12 14.5a8.1 8.1 0 1 1 0 11M28 25.5a8.1 8.1 0 1 1 0-11" fill="none" stroke="#e4ff61" stroke-linecap="round" stroke-width="3.2" />
+          <circle cx="20" cy="20" r="2.4" fill="#e4ff61" />
+        </svg>
+        <span>cutout</span>
+        <span class="brand-note">LOCAL IMAGE TOOL</span>
+      </a>
+      <a class="github-link" href="./">Back to Cutout <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="credits-shell">
+      <section class="credits-card" aria-labelledby="creditsTitle">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Transparency</p>
+        <h1 id="creditsTitle">Credits &amp;<br><span>license notes.</span></h1>
+        <p class="credits-lede">The image model runs in your browser. Only the app and model files are fetched online; your photo is not uploaded or stored by this page.</p>
+
+        <section aria-labelledby="birefnetTitle">
+          <h2 id="birefnetTitle">BiRefNet Lite 512</h2>
+          <p>Cutout loads the browser-ready FP16 ONNX model <a href="https://huggingface.co/studioludens/birefnet-lite-512" target="_blank" rel="noreferrer">studioludens/birefnet-lite-512</a> from Hugging Face at run time. The model repository identifies the model as MIT-licensed and attributes it to:</p>
+          <ul>
+            <li>Copyright © 2024 ZhengPeng</li>
+            <li>Copyright © 2026 Studio Ludens V.O.F.</li>
+          </ul>
+          <p><a href="https://huggingface.co/studioludens/birefnet-lite-512/tree/main/LICENSE" target="_blank" rel="noreferrer">Read the MIT license</a> · <a href="https://huggingface.co/studioludens/birefnet-lite-512" target="_blank" rel="noreferrer">Model card and details</a></p>
+          <p>The model accepts `input_image` at 512 × 512 and emits a single-channel mask as `output_image` at 512 × 512. The mask is resized to match the source PNG dimensions; this does not add inference detail.</p>
+        </section>
+
+        <section aria-labelledby="transformersTitle">
+          <h2 id="transformersTitle">Transformers.js 3.7.2</h2>
+          <p>The app loads <a href="https://github.com/huggingface/transformers.js" target="_blank" rel="noreferrer">Transformers.js</a> from jsDelivr at run time. The pinned package identifies its license as Apache-2.0.</p>
+          <p><a href="https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2/LICENSE" target="_blank" rel="noreferrer">Read the Apache-2.0 license</a> · <a href="https://www.jsdelivr.com/package/npm/@huggingface/transformers" target="_blank" rel="noreferrer">Pinned package</a></p>
+        </section>
+
+        <section aria-labelledby="projectTitle">
+          <h2 id="projectTitle">Cutout</h2>
+          <p>The app’s source code is licensed under GPL-3.0.</p>
+          <p><a href="https://github.com/melvinvarghese/Background-Remover/blob/main/LICENSE" target="_blank" rel="noreferrer">Read the project license</a> · <a href="https://github.com/melvinvarghese/Background-Remover" target="_blank" rel="noreferrer">View the source repository</a></p>
+        </section>
+
+        <a class="credits-return" href="./">← Back to the background remover</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Made for useful cutouts, not uploads.</span>
+      <span>No accounts · no ads · no image storage</span>
+    </footer>
+  </body>
+</html>
