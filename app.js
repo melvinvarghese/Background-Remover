@@ -1,5 +1,6 @@
 import {
   applyMaskToRgba,
+  configureRuntimeEnvironment,
   logitsToConfidence,
   resizeMaskBilinear,
   beginImageRun,
@@ -136,13 +137,10 @@ async function getModelAndProcessor() {
   setProgress(0, 'Loading the browser runtime…');
   const { AutoModel, AutoProcessor, RawImage, env } = await import(TRANSFORMERS_URL);
 
-  // The runtime may fetch app/model files, but the user-selected File is only decoded locally.
-  env.allowLocalModels = false;
-  env.useFS = false;
-  env.useFSCache = false;
-  env.useBrowserCache = false;
-  env.useWasmCache = false;
-  env.logLevel = 40;
+  // Cache only app/model assets; the selected image remains in this tab.
+  configureRuntimeEnvironment(env);
+  setStatus('Loading BiRefNet Lite. First use may take a while; your photo stays in this tab.');
+  setProgress(0, 'Loading the model (about 94 MB on first use)…');
 
   let device = 'wasm';
   try {
@@ -217,7 +215,7 @@ async function processImage() {
 
     await getModelAndProcessor();
     setStatus('Finding the subject locally…');
-    setProgress(0, 'Preparing a 512 × 512 model input…');
+    setProgress(0, 'Analyzing a 512 × 512 input locally…');
 
     const rawImage = await state.RawImage.read(file);
     const { pixel_values: pixelValues } = await state.processor(rawImage);

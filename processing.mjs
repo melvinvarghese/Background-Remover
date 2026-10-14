@@ -1,6 +1,15 @@
 export const MAX_FILE_BYTES = 20 * 1024 * 1024;
 const SUPPORTED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
+export function configureRuntimeEnvironment(env) {
+  env.allowLocalModels = false;
+  env.useFS = false;
+  env.useFSCache = false;
+  env.useBrowserCache = true;
+  env.useWasmCache = true;
+  env.logLevel = 40;
+}
+
 export function validateImageFile(file) {
   if (!file) return { ok: false, reason: 'Choose an image file first.' };
   if (!SUPPORTED_TYPES.has(file.type)) {

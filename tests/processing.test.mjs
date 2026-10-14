@@ -10,6 +10,31 @@ async function loadProcessing() {
   return import(new URL('../processing.mjs', import.meta.url));
 }
 
+test('caches model and runtime assets without enabling local model or file-system storage', async () => {
+  const { configureRuntimeEnvironment } = await loadProcessing();
+  assert.equal(typeof configureRuntimeEnvironment, 'function', 'processing must configure model/runtime caching');
+  if (typeof configureRuntimeEnvironment !== 'function') return;
+
+  const env = {
+    allowLocalModels: true,
+    useFS: true,
+    useFSCache: true,
+    useBrowserCache: false,
+    useWasmCache: false,
+    logLevel: 0,
+  };
+  configureRuntimeEnvironment(env);
+
+  assert.deepEqual(env, {
+    allowLocalModels: false,
+    useFS: false,
+    useFSCache: false,
+    useBrowserCache: true,
+    useWasmCache: true,
+    logLevel: 40,
+  });
+});
+
 test('accepts JPEG, PNG, and WebP uploads within the documented size limit', async () => {
   const { validateImageFile, MAX_FILE_BYTES } = await loadProcessing();
   for (const type of ['image/jpeg', 'image/png', 'image/webp']) {

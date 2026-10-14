@@ -10,7 +10,7 @@ Open the live app at <https://melvinvarghese.github.io/Background-Remover/>. To 
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000> in a current browser. The first removal loads Transformers.js from jsDelivr and downloads the model from Hugging Face (about 94 MB). WebGPU is used when the browser and device support it; otherwise the app uses the WebAssembly runtime.
+Then open <http://localhost:8000> in a current browser. The first removal loads Transformers.js from jsDelivr and downloads the model from Hugging Face (about 94 MB). The browser may cache the model and runtime assets for later runs; selected images are not cached. WebGPU is used when the browser and device support it; otherwise the app uses the WebAssembly runtime.
 
 ## Privacy boundary
 
