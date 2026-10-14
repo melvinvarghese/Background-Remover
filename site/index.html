@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f5fa">
+    <meta name="description" content="Remove an image background in your browser. Your photo stays on your device; download a transparent PNG only when you choose.">
+    <meta name="referrer" content="no-referrer">
+    <title>Cutout — background removal, kept local</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Cutout home">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="1" y="1" width="38" height="38" rx="12" fill="currentColor" />
+          <path d="M12 14.5a8.1 8.1 0 1 1 0 11M28 25.5a8.1 8.1 0 1 1 0-11" fill="none" stroke="#e4ff61" stroke-linecap="round" stroke-width="3.2" />
+          <circle cx="20" cy="20" r="2.4" fill="#e4ff61" />
+        </svg>
+        <span>cutout</span>
+        <span class="brand-note">LOCAL IMAGE TOOL</span>
+      </a>
+      <a class="github-link" href="https://github.com/melvinvarghese/Background-Remover" target="_blank" rel="noreferrer">Open source <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro" aria-labelledby="mainTitle">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Background remover</p>
+        <h1 id="mainTitle">A clean cutout.<br><span>Still your photo.</span></h1>
+        <p class="intro-copy">Remove the background without sending your image to a server. Your photo stays in this browser tab from start to finish.</p>
+
+        <div class="promise-list" aria-label="Privacy and download details">
+          <div class="promise-row">
+            <span class="promise-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.4-2.8 7.6-7 10-4.2-2.4-7-5.6-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <div><strong>No image upload</strong><small>Only the app and model are fetched online.</small></div>
+          </div>
+          <div class="promise-row">
+            <span class="promise-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="m4 12 4-4 4 4 4-4 4 4M4 16l3-3 3 3 3-3 3 3 2-2 2 2"/></svg>
+            </span>
+            <div><strong>Your download, your choice</strong><small>Nothing is saved by the page; download the PNG when it is ready.</small></div>
+          </div>
+        </div>
+
+        <p class="model-note"><span class="note-stroke" aria-hidden="true"></span><span><strong>A note on detail</strong>The model analyzes a 512 × 512 version of your photo, then scales the cutout back to the original pixel dimensions. A larger PNG keeps its size, but not extra inference detail.</span></p>
+      </section>
+
+      <section class="workbench" id="workbench" aria-labelledby="workbenchTitle">
+        <div class="workbench-top">
+          <div>
+            <p class="step-label">Your workspace</p>
+            <h2 id="workbenchTitle">Make a cutout</h2>
+          </div>
+          <button class="text-button" id="clearButton" type="button" hidden>Start over</button>
+        </div>
+
+        <div class="empty-prompt" id="emptyPrompt">
+          <label class="dropzone" id="dropzone" for="imageInput">
+            <input class="visually-hidden" id="imageInput" type="file" accept="image/jpeg,image/png,image/webp">
+            <span class="upload-symbol" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><path d="M24 31V9m0 0-8 8m8-8 8 8M10 28v9a4 4 0 0 0 4 4h20a4 4 0 0 0 4-4v-9"/></svg>
+            </span>
+            <span class="drop-title">Drop a photo here</span>
+            <span class="drop-subtitle">or choose one from your device</span>
+            <span class="choose-button" id="introDropzone">Choose a photo</span>
+            <span class="file-note">JPEG, PNG or WebP · up to 20 MB</span>
+          </label>
+        </div>
+
+        <div class="image-workspace" id="imageWorkspace" hidden>
+          <div class="source-caption"><span class="file-dot" aria-hidden="true"></span><span id="sourceLabel"></span></div>
+          <div class="preview-grid">
+            <figure class="preview-panel">
+              <figcaption><span>Original</span><span class="preview-tag">LOCAL</span></figcaption>
+              <div class="preview-frame"><img id="sourcePreview" alt="Selected original image"></div>
+            </figure>
+            <figure class="preview-panel">
+              <figcaption><span>Transparent cutout</span><span class="preview-tag preview-tag--result">PNG</span></figcaption>
+              <div class="preview-frame checkerboard"><canvas id="resultCanvas" aria-label="Background-removed image preview"></canvas><span class="result-placeholder">Your cutout<br>will appear here</span></div>
+            </figure>
+          </div>
+          <div class="edge-control" id="edgeControl" hidden>
+            <div class="edge-label"><label for="edgeSlider">Edge softness</label><span id="edgeValue">0%</span></div>
+            <input id="edgeSlider" type="range" min="0" max="20" step="1" value="4" aria-describedby="edgeHelp">
+            <p id="edgeHelp">A small feather can soften a hard edge.</p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary-button" id="processButton" type="button" disabled>
+            <span>Remove background</span><span class="button-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button class="download-button" id="downloadButton" type="button" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg><span>Download transparent PNG</span>
+          </button>
+          <div class="status-wrap" aria-live="polite" aria-atomic="true">
+            <p class="status" id="status"></p>
+            <progress class="progress" id="progress" max="100" value="0" hidden></progress>
+            <p class="progress-label" id="progressLabel"></p>
+          </div>
+        </div>
+
+        <div class="model-disclosure">
+          <span class="disclosure-mark" aria-hidden="true">i</span>
+          <p>First run downloads an approximately 94 MB model from Hugging Face. Nothing from your photo is sent. <a href="https://huggingface.co/studioludens/birefnet-lite-512" target="_blank" rel="noreferrer">About the model</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Made for useful cutouts, not uploads.</span>
+      <span>No accounts · no ads · no image storage</span>
+    </footer>
+  </body>
+</html>
