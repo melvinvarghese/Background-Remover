@@ -4,10 +4,10 @@ A small, open-source background remover that runs in your browser. The image you
 
 ## Try it locally
 
-Serve the `site/` folder over HTTP (opening the HTML directly as a `file://` URL will not load browser modules reliably):
+Open the live app at <https://melvinvarghese.github.io/Background-Remover/>. To run it locally, serve the repository root over HTTP (opening the HTML directly as a `file://` URL will not load browser modules reliably):
 
 ```sh
-python3 -m http.server 8000 --directory site
+python3 -m http.server 8000
 ```
 
 Then open <http://localhost:8000> in a current browser. The first removal loads Transformers.js from jsDelivr and downloads the model from Hugging Face (about 94 MB). WebGPU is used when the browser and device support it; otherwise the app uses the WebAssembly runtime.

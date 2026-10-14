@@ -3,11 +3,11 @@ import { existsSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-const modulePath = fileURLToPath(new URL('../site/processing.mjs', import.meta.url));
+const modulePath = fileURLToPath(new URL('../processing.mjs', import.meta.url));
 
 async function loadProcessing() {
-  assert.ok(existsSync(modulePath), 'site/processing.mjs must expose the local image-processing helpers');
-  return import(new URL('../site/processing.mjs', import.meta.url));
+  assert.ok(existsSync(modulePath), 'processing.mjs must expose the local image-processing helpers');
+  return import(new URL('../processing.mjs', import.meta.url));
 }
 
 test('accepts JPEG, PNG, and WebP uploads within the documented size limit', async () => {
